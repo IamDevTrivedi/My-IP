@@ -81,6 +81,7 @@ jobs:
                   key: ${{ secrets.EC2_PRIVATE_KEY }}
                   script: |
                       source ~/.bashrc
+                      source ~/.nvm/nvm.sh
                       cd /projects/My-IP
                       git pull origin main
                       pnpm install --frozen-lockfile

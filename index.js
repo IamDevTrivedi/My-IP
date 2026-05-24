@@ -17,7 +17,6 @@ app.get("/", (req, res) => {
         success: true,
         message: "Request successful",
         ip: req.ip,
-        hello: "world3",
     });
 });
 
