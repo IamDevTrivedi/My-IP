@@ -1,0 +1,78 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+    gate:
+        name: Gate
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check SKIP_ACTIONS variable
+              run: |
+                  if [ "${{ vars.SKIP_ACTIONS }}" = "true" ]; then
+                    echo "SKIP_ACTIONS is true - skipping all actions"
+                    exit 1   # Fail the gate job → downstream jobs are skipped
+                  else
+                    echo "SKIP_ACTIONS is false - proceeding with checks"
+                  fi
+
+    lint:
+        name: ESLint
+        runs-on: ubuntu-latest
+        needs: [gate]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Run ESLint
+              run: pnpm lint
+
+    prettier:
+        name: Prettier
+        runs-on: ubuntu-latest
+        needs: [gate]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Check code formatting
+              run: pnpm format:check
+
+    conclusion:
+        name: Conclusion
+        runs-on: ubuntu-latest
+        needs: [lint, prettier]
+        steps:
+            - name: All checks completed
+              run: |
+                  echo "All jobs completed successfully!"
