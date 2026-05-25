@@ -85,5 +85,5 @@ jobs:
                       cd /projects/My-IP
                       git pull origin main
                       pnpm install --frozen-lockfile
-                      pm2 restart my-ip-api
+                      pm2 reload my-ip-api
                       echo "Deployment completed successfully"
