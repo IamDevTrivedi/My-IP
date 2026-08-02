@@ -87,3 +87,5 @@ jobs:
                       pnpm install --frozen-lockfile
                       pm2 reload my-ip-api
                       echo "Deployment completed successfully"
+                      cd ~/.ssh
+                      ll
