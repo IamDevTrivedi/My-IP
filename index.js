@@ -15,7 +15,7 @@ app.set("trust proxy", 1);
 app.get("/", (req, res) => {
     return res.status(200).json({
         success: true,
-        message: "Request successful",
+        message: "Request successful - Changed",
         ip: req.ip,
     });
 });
